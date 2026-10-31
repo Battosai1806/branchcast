@@ -28,7 +28,7 @@ export OPENAI_API_KEY='your-key'
 python3 feasibility/diagram.py path/to/rough-diagram.png
 ```
 
-The script sends the image to the OpenAI Responses API and writes `diagram.json`. Open `feasibility/editor.html` in your browser, load that file, and edit the returned shapes. Drag their borders to move, resize using the bottom-right corner, edit labels directly, and download the result. The default model is `gpt-4o-mini`; override it with `OPENAI_MODEL` or `--model`. Output is an approximate reconstruction, not a pixel-perfect vectorization, and currently supports rectangles, ellipses, diamonds, and arrows. API usage can incur charges. See [OpenAI image inputs](https://developers.openai.com/api/docs/guides/images-vision) and [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
+You can use `feasibility/sample-diagram.png` for a first smoke test. The script sends the image to the OpenAI Responses API and writes `diagram.json`. Open `feasibility/editor.html` in your browser, load that file, and edit the returned shapes. Drag their borders to move, resize using the bottom-right corner, edit labels directly, and download the result. The default model is `gpt-4o-mini`; override it with `OPENAI_MODEL` or `--model`. Output is an approximate reconstruction, not a pixel-perfect vectorization, and currently supports rectangles, ellipses, diamonds, and arrows. API usage can incur charges. See [OpenAI image inputs](https://developers.openai.com/api/docs/guides/images-vision) and [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs).
 
 ### Twitch chat event
 
@@ -46,6 +46,12 @@ python3 feasibility/twitch_chat.py
 After the subscription succeeds, send a chat message in that channel. The backend prints the chatter, message text, and EventSub message ID. Stop with Ctrl+C. The token is read from the process environment and never written to the repository. This is a local experiment: it does not refresh tokens, persist messages, or connect to the prototype UI. [Twitch authentication and EventSub setup](https://dev.twitch.tv/docs/chat/authenticating) and [EventSub WebSocket handling](https://dev.twitch.tv/docs/eventsub/handling-websocket-events) explain the requirements.
 
 Run the offline checks with `python3 -m unittest discover -s tests`.
+
+### Stage 2 completion checklist
+
+1. Run the diagram converter on the sample and a real rough sketch. Load each output in the editor and confirm the shapes and layout are usable and can be edited and exported.
+2. Run the Twitch listener, send a real message in the configured channel, and confirm the message appears in the listener output.
+3. Record the results, including any recognition errors or connection issues. The offline tests use mocked services and do not establish live feasibility.
 
 ## Roadmap
 
