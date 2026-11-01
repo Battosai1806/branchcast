@@ -7,3 +7,5 @@ dist/
 __pycache__/
 *.pyc
 diagram.json
+branchcast.db
+branchcast.db-*

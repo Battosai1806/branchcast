@@ -1,19 +1,19 @@
 # BranchCast
 
-A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 1 is a visual skeleton using simulated data; it does not require Twitch credentials or AI.
+A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 3 is underway: the local app now saves sessions and connects viewer forks, submissions, approval, and an updating OBS display. AI enhancement is simulated and the Twitch listener remains a separate feasibility experiment.
 
 ## Run locally
 
-Open `index.html` in a modern browser, or serve the folder with `python3 -m http.server 8000` and visit http://localhost:8000.
+Run `python3 server.py` from the repository, then visit http://127.0.0.1:8000 in a modern browser. On Windows, `py server.py` works when Python is installed. Keep the server running while using the app; a static server or opening `index.html` directly cannot provide session functionality.
 
 ## Explore the prototype
 
-- **Streamer editor:** preview the shared canvas and edit its title.
-- **Viewer editor:** write a simulated branch and submit it to the queue.
-- **Submission queue:** approve an idea to feature it on the OBS preview, or dismiss it.
-- **OBS display:** preview the currently featured idea.
+- **Streamer editor:** add, move, rename, or remove shapes; edit the title and prompt; copy a viewer link.
+- **Viewer editor:** fork the canvas, change your copy, and submit it to the queue.
+- **Submission queue:** review shape labels, approve an idea to feature it on the OBS display, or dismiss it.
+- **OBS display:** copy the display URL into an OBS Browser Source. It refreshes automatically when an idea is approved.
 
-State is held in the current browser tab and resets on refresh. Canvas tools, session sharing, live viewer counts, and OBS integration are visual placeholders. The prototype has no backend, persistence, Twitch connection, AI, or real drawing editor.
+Sessions and submissions persist in the local SQLite file `branchcast.db` (ignored by Git); viewer drafts and the streamer access token are stored in the browser. Keep the original streamer browser and session URL: clearing its local storage loses streamer access. The OBS browser source can use the same server on the same computer. The viewer link uses the server's address, so `127.0.0.1` links work only on that computer. This is a local development prototype, not public hosting: it does not provide accounts, production security, remote collaboration over the internet, or reliable multi-user synchronization. The simulated enhancement changes shape styles; it does not call AI. Twitch is not connected to the app.
 
 ## Stage 2: feasibility experiments
 
@@ -55,7 +55,7 @@ Run the offline checks with `python3 -m unittest discover -s tests`.
 
 ## Roadmap
 
-1. Visual skeleton with simulated data (current stage).
+1. Visual skeleton with simulated data (implemented).
 2. Test AI diagram-to-editable-shapes and a real Twitch chat event reaching the backend (experiments implemented; live verification requires credentials).
-3. Connect the editor, AI, sharing, viewer forks, submissions, persistence, approval, and automatically updated OBS display.
+3. Connect the editor, AI, sharing, viewer forks, submissions, persistence, approval, and automatically updated OBS display (local prototype started; hosted collaboration, real AI, and Twitch integration remain).
 4. Polish the experience, test end to end, and prepare the hackathon demonstration.
