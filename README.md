@@ -47,6 +47,10 @@ After the subscription succeeds, send a chat message in that channel. The backen
 
 Run the offline checks with `python3 -m unittest discover -s tests`.
 
+For the three-minute hackathon presentation, see [DEMO.md](DEMO.md). Canvas shapes can also be moved with the arrow keys when their move button is focused; hold Shift for larger steps.
+
+To repeat the optional browser smoke test, start a separate local server and run `node tests/browser_flow.cjs <playwright-module-path> <chromium-browser-executable> <server-url>`. It requires a separately installed Playwright package and Chromium-compatible browser. It creates a new test session on that server; use a disposable database for testing, for example `BRANCHCAST_DB=/tmp/branchcast-test.db python3 server.py --port 18876`.
+
 ### Stage 2 completion checklist
 
 1. Run the diagram converter on the sample and a real rough sketch. Load each output in the editor and confirm the shapes and layout are usable and can be edited and exported.
@@ -58,4 +62,4 @@ Run the offline checks with `python3 -m unittest discover -s tests`.
 1. Visual skeleton with simulated data (implemented).
 2. Test AI diagram-to-editable-shapes and a real Twitch chat event reaching the backend (experiments implemented; live verification requires credentials).
 3. Connect the editor, AI, sharing, viewer forks, submissions, persistence, approval, and automatically updated OBS display (local prototype started; hosted collaboration, real AI, and Twitch integration remain).
-4. Polish the experience, test end to end, and prepare the hackathon demonstration.
+4. Polish the experience, test end to end, and prepare the hackathon demonstration (local browser flow verified and demo script prepared; live services and production delivery remain).

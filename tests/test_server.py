@@ -4,6 +4,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
@@ -75,6 +76,34 @@ class ServerFlowTests(unittest.TestCase):
             with self.assertRaises(urllib.error.HTTPError) as denied:
                 self.request(path)
             self.assertEqual(denied.exception.code, 404)
+
+    def test_competing_approvals_only_one_succeeds(self):
+        created = self.request('/api/sessions', {})
+        path = '/api/sessions/' + created['id']
+        item = self.request(path + '/submissions', {'author': 'viewer', 'title': 'idea', 'description': 'a branch', 'shapes': []})
+
+        def approve():
+            try:
+                self.request(path + '/submissions/' + item['id'] + '/approve', {}, created['owner_token'])
+                return 200
+            except urllib.error.HTTPError as error:
+                return error.code
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            results = list(executor.map(lambda _: approve(), range(2)))
+        self.assertEqual(sorted(results), [200, 404])
+        self.assertEqual(self.request(path)['featured']['title'], 'idea')
+
+    def test_owner_permissions_and_dismissal(self):
+        created = self.request('/api/sessions', {})
+        path = '/api/sessions/' + created['id']
+        item = self.request(path + '/submissions', {'author': 'viewer', 'title': 'idea', 'description': 'a branch', 'shapes': []})
+        with self.assertRaises(urllib.error.HTTPError) as denied:
+            self.request(path + '/canvas', {'title': 'attack', 'prompt': '', 'shapes': []}, 'incorrect-token')
+        self.assertEqual(denied.exception.code, 403)
+        self.request(path + '/submissions/' + item['id'] + '/dismiss', {}, created['owner_token'])
+        self.assertEqual(self.request(path, token=created['owner_token'])['submissions'], [])
+        self.assertIsNone(self.request(path)['featured'])
 
 
 if __name__ == '__main__':

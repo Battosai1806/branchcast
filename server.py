@@ -137,6 +137,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(404, {'error': 'Not found.'})
         session_id, operation = parts[2], parts[3:]
         with database() as db:
+            # Serialize decisions on pending submissions so two simultaneous
+            # approvals cannot both succeed for the same branch.
+            db.execute('BEGIN IMMEDIATE')
             row = db.execute('SELECT * FROM sessions WHERE id = ?', (session_id,)).fetchone()
             if not row:
                 return self.respond(404, {'error': 'Session not found.'})
