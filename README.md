@@ -47,7 +47,7 @@ After the subscription succeeds, send a chat message in that channel. The backen
 
 Run the offline checks with `python3 -m unittest discover -s tests`.
 
-For the three-minute hackathon presentation, see [DEMO.md](DEMO.md). Canvas shapes can also be moved with the arrow keys when their move button is focused; hold Shift for larger steps.
+For the full implementation and testing handoff, see [HANDOFF.md](HANDOFF.md). For the three-minute hackathon presentation, see [DEMO.md](DEMO.md). Canvas shapes can also be moved with the arrow keys when their move button is focused; hold Shift for larger steps.
 
 To repeat the optional browser smoke test, start a separate local server and run `node tests/browser_flow.cjs <playwright-module-path> <chromium-browser-executable> <server-url>`. It requires a separately installed Playwright package and Chromium-compatible browser. It creates a new test session on that server; use a disposable database for testing, for example `BRANCHCAST_DB=/tmp/branchcast-test.db python3 server.py --port 18876`.
 
