@@ -1,4 +1,4 @@
-> **November 2 update:** A local Twitch chat relay has been implemented: it routes `!branch title | description` into the streamer approval queue. Offline integration tests pass, but real Twitch authorization, a live event, actual OBS/Twitch footage, and Devpost submission remain unverified. See [TWITCH_SETUP.md](TWITCH_SETUP.md) and [SUBMISSION.md](SUBMISSION.md). The details below reflect the November 1 audit and may describe the pre-relay state.
+> **November 2 update:** A local Twitch chat relay has been implemented: it routes `!branch title | description` into the streamer approval queue. Offline integration tests pass. On November 2, a real Twitch chat message was received and its approved branch appeared in the local display preview. Actual OBS Studio, Twitch broadcast footage, and Devpost submission remain unverified. See [TWITCH_SETUP.md](TWITCH_SETUP.md) and [SUBMISSION.md](SUBMISSION.md). The details below reflect the November 1 audit and may describe the pre-relay state.
 # BranchCast — implementation and test handoff
 
 **Status as of November 1, 2026:** BranchCast is a local hackathon prototype, not a completed or production-ready application. The repository contains a working local collaboration flow, two separate feasibility experiments, and a demonstration script. The work was fast because it uses a small Python standard-library server, plain HTML/CSS/JavaScript, SQLite, and simple prototype UI—not a full cloud product.
@@ -11,12 +11,12 @@ The [README](README.md) explains how to run the project and [DEMO.md](DEMO.md) c
 | --- | --- | --- |
 | Streamer canvas | Add, rename, move, and delete labeled shapes; save the canvas title and prompt. | Freehand drawing, arrows/connectors, resizing, undo/redo, zoom, and real AI enhancement are not implemented in the main app. |
 | Viewer fork | Copy a session's canvas into a browser-local draft, edit it, and submit it. | A draft is not continuously synchronized to other devices, and a `127.0.0.1` link cannot be opened from a different machine. |
-| Submission queue | An owner can see pending submissions, approve one, or dismiss one. | The queue shows labels rather than a full visual branch preview; moderation, spam prevention, and real Twitch identity are absent. |
-| OBS display | A separate browser page polls the local server and shows the last approved idea. | A live OBS Studio capture was not verified; remote hosting, production reliability, and full shape-layout rendering are not implemented. |
+| Submission queue | An owner can see pending submissions, approve one, or dismiss one. | The queue shows labels rather than a full visual branch preview; stronger account authentication, moderation, and spam prevention are absent. |
+| OBS display | A separate browser page polls the local server and shows the last approved idea. | A live OBS Studio capture was not verified; remote hosting and production reliability are not implemented. The local preview renders simple positioned shapes. |
 | Persistence | A local SQLite database stores session, canvas, and submitted/featured data. Drafts and owner tokens are held in browser local storage. | There is no shared cloud database, account recovery, backups, migration system, or production multi-user protection. Clearing browser storage loses the owner token. |
 | AI feasibility | A separate Python script sends an image to OpenAI and requests structured shape data; a separate HTML editor can load that data. | The live request has not succeeded; the main app does not call this script, and its **Simulate enhancement** button is only a style change. |
-| Twitch feasibility | A separate Python EventSub listener can subscribe to chat messages when correctly configured; offline tests simulate Twitch events. | No real Twitch event has been received, and the listener is not connected to the main app. |
-| Demo | A local three-minute script and presentation view exist. | The project has not been verified against the full competition submission requirements, and no final recording/submission has been produced. |
+| Twitch feasibility | A local EventSub relay received a real Twitch chat suggestion and queued it for streamer approval. | Only one real-channel test has been observed; recovery, token expiry, and actual OBS/Twitch broadcast still need testing. |
+| Demo | A local three-minute script and presentation view exist. | The official competition requirements were reviewed; no final recording or submission has been produced. |
 
 The owner token and session links are prototype mechanisms, not a complete permission system. Do not expose the local Python server to the public internet as it stands.
 
@@ -53,7 +53,7 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 
 ### 3.2 Twitch app, credentials, and real chat event
 
-**Observed result:** The listener exists in `feasibility/twitch_chat.py`; offline tests emulate a welcome, subscription, duplicate message, and revocation. The required Twitch environment variables were not configured, and no real Twitch event has been received. The last checked Linux environment also lacked `pip` and the `websockets` package; install them in a supported Python environment or virtual environment.
+**Observed result:** The listener exists in `feasibility/twitch_chat.py`; offline tests emulate a welcome, subscription, duplicate message, and revocation. On November 2, the configured relay received a real chat command, and the approved branch appeared in the local display preview. A Windows virtual environment with the WebSocket dependency was installed on the original machine; other machines must install their own dependencies.
 
 **Partner follow-up:**
 
@@ -63,7 +63,7 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 4. Run `python3 feasibility/twitch_chat.py`. Confirm it reports a successful subscription, then send a chat message in the target channel. Verify the listener prints that message and its ID. Do not publish raw user chat logs without considering privacy.
 5. Test expired/revoked tokens, a wrong client ID, missing scope, a disconnected socket, a Twitch-requested reconnect, and duplicate messages. Twitch notes that events may be redelivered and that events lost during an unexpected disconnect are not replayed; see [EventSub WebSocket handling](https://dev.twitch.tv/docs/eventsub/handling-websocket-events/).
 
-**Done when:** A real message from the intended Twitch channel reaches the backend, the result is documented, and reconnection/authorization failures have clear behavior. This test does not by itself connect Twitch to the BranchCast UI.
+**Current result:** A real message reached the backend and was approved in the UI. **Still needed:** verify reconnection and authorization failure behavior, token lifecycle, actual OBS Studio rendering, and the Twitch broadcast.
 
 ## 4. Pending implementation work
 
@@ -105,21 +105,22 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 
 - [ ] Test the generated URL in **actual OBS Studio**, not just a headless browser. Confirm source dimensions, transparency/background requirements, font loading, refresh, reconnect, and readability on stream.
 - [ ] Exercise the intended hosted URL in OBS, including restarts, expired sessions, and bad network conditions. The current display polls every two seconds.
-- [ ] Verify the hackathon's current eligibility, Twitch integration, submission format, deadline, demo length, and any required assets from the event's official rules. These requirements have not been verified here.
+- [ ] Confirm the team's eligibility and complete the official event submission requirements, including a real Twitch demonstration and accessible YouTube video. See [SUBMISSION.md](SUBMISSION.md).
 - [ ] Rehearse the [demo script](DEMO.md), record a successful run, prepare fallback footage, and submit only after the team agrees the live integrations and claims are accurate.
 
 ## 5. Test inventory and evidence
 
 ### Already run successfully
 
-- `python3 -m unittest discover -s tests -v`: **9 offline tests** passed. These cover mocked OpenAI response handling, input validation, mocked Twitch subscription and event deduplication, local HTTP permission checks, submission/approval, persistence within the test database, rejection of private-file routes, and competing approvals.
+- `python3 -m unittest discover -s tests -v`: **13 offline tests** passed after the Twitch relay was added. These cover mocked OpenAI response handling, input validation, mocked Twitch subscription and event deduplication, local HTTP permission checks, submission/approval, persistence within the test database, rejection of private-file routes, and competing approvals.
 - A headless Edge/Playwright test, `tests/browser_flow.cjs`, passed with separate browser contexts: streamer edits a shape, viewer forks and submits, streamer approves, and an already-open display updates. This was a local browser test, not a test in OBS Studio or across remote machines.
 - Python compilation and JavaScript syntax checks passed at the time of the last application change.
 
 ### Still required before claiming a working end-to-end product
 
 - [ ] Successful real AI image-to-shape conversion, representative sketch quality evaluation, and editing the output.
-- [ ] Real Twitch chat message received for the intended broadcaster, plus reconnect and authorization failure cases.
+- [x] A real Twitch chat message was received for the intended broadcaster and approved in the local display preview.
+- [ ] Verify Twitch reconnect, authorization failure, revocation, and token lifecycle with live services.
 - [ ] Full browser flow against the **hosted** app using at least two different devices/networks and independent users.
 - [ ] Real OBS Browser Source test against the intended deployment and across connection interruptions.
 - [ ] Full permissions tests: unauthenticated viewers, wrong owner, moderator, revoked tokens, session isolation, and attempts to access private content.
@@ -132,7 +133,7 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 ## 6. Suggested order of work
 
 1. Decide the hackathon's required scope, deadline, funding, and whether a local-only demonstration is acceptable.
-2. Resolve API access and perform the AI feasibility test; independently complete the Twitch live event test.
+2. Resolve API access and perform the AI feasibility test if desired; a real Twitch chat event has passed once, while further reliability tests remain.
 3. Choose hosting and identity/permission design. Build remote sessions and protect the service before exposing it.
 4. Integrate the real AI and Twitch flows into the main app, then verify the OBS source against the hosted environment.
 5. Run the remaining tests, rehearse and record the demo, and submit only what has been verified.

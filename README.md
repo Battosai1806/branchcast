@@ -1,6 +1,6 @@
 # BranchCast
 
-A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 3 is underway: the local app now saves sessions and connects viewer forks, submissions, approval, and an updating OBS display. AI enhancement is simulated. A local Twitch chat relay is implemented but still needs a real-channel test.
+A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 3 is underway: the local app now saves sessions and connects viewer forks, submissions, approval, and an updating OBS display. AI enhancement is simulated. A local Twitch chat relay has received a real chat suggestion; OBS Studio and broadcast testing remain.
 
 ## Run locally
 
@@ -13,11 +13,11 @@ Run `python3 server.py` from the repository, then visit http://127.0.0.1:8000 in
 - **Submission queue:** review shape labels, approve an idea to feature it on the OBS display, or dismiss it.
 - **OBS display:** copy the display URL into an OBS Browser Source. It refreshes automatically when an idea is approved.
 
-Sessions and submissions persist in the local SQLite file `branchcast.db` (ignored by Git); viewer drafts and the streamer access token are stored in the browser. Keep the original streamer browser and session URL: clearing its local storage loses streamer access. The OBS browser source can use the same server on the same computer. The viewer link uses the server's address, so `127.0.0.1` links work only on that computer. This is a local development prototype, not public hosting: it does not provide accounts, production security, remote collaboration over the internet, or reliable multi-user synchronization. The simulated enhancement changes shape styles and the sample sketch adds predefined shapes; neither calls AI. A separately started Twitch relay can submit chat suggestions into the queue, but the connection has not yet been verified against a real channel.
+Sessions and submissions persist in the local SQLite file `branchcast.db` (ignored by Git); viewer drafts and the streamer access token are stored in the browser. Keep the original streamer browser and session URL: clearing its local storage loses streamer access. The OBS browser source can use the same server on the same computer. The viewer link uses the server's address, so `127.0.0.1` links work only on that computer. This is a local development prototype, not public hosting: it does not provide accounts, production security, remote collaboration over the internet, or reliable multi-user synchronization. The simulated enhancement changes shape styles and the sample sketch adds predefined shapes; neither calls AI. A separately started Twitch relay can submit chat suggestions into the queue. A real chat suggestion was received and approved on November 2, 2026; the actual OBS Studio source and Twitch broadcast remain unverified.
 
 ## Twitch chat and submission
 
-To connect a real Twitch channel, follow [TWITCH_SETUP.md](TWITCH_SETUP.md). With the local Twitch relay running, a chat message of the form `!branch title | description` becomes a pending submission; only the streamer can approve it for the OBS display. The live Twitch connection and actual OBS/Twitch broadcast still require verification. The sample sketch and enhancement are clearly labeled simulations.
+To connect a real Twitch channel, follow [TWITCH_SETUP.md](TWITCH_SETUP.md). With the local Twitch relay running, a chat message of the form `!branch title | description` becomes a pending submission; only the streamer can approve it for the OBS display. A real Twitch chat message has been received and approved in the local preview; the actual OBS Studio source and Twitch broadcast still require verification. The sample sketch and enhancement are clearly labeled simulations.
 
 For the event requirements and a draft description, see [SUBMISSION.md](SUBMISSION.md). The official event requires a working Twitch connection and a video showing the project working on Twitch and how Codex was used.
 ## Stage 2: feasibility experiments
@@ -65,6 +65,6 @@ To repeat the optional browser smoke test, start a separate local server and run
 ## Roadmap
 
 1. Visual skeleton with simulated data (implemented).
-2. Test AI diagram-to-editable-shapes and a real Twitch chat event reaching the backend (experiments implemented; live verification requires credentials).
-3. Connect the editor, AI, sharing, viewer forks, submissions, persistence, approval, and automatically updated OBS display (local prototype started; hosted collaboration, real AI, and live Twitch verification remain).
+2. Test AI diagram-to-editable-shapes and a real Twitch chat event reaching the backend (Twitch chat verified once; live AI conversion remains unverified).
+3. Connect the editor, AI, sharing, viewer forks, submissions, persistence, approval, and automatically updated OBS display (local prototype started; hosted collaboration and real AI remain; the Twitch chat relay passed one live test).
 4. Polish the experience, test end to end, and prepare the hackathon demonstration (local browser flow verified and demo script prepared; live services and production delivery remain).
