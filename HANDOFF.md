@@ -1,7 +1,7 @@
-> **November 2 update:** A local Twitch chat relay has been implemented: it routes `!branch title | description` into the streamer approval queue. Offline integration tests pass. On November 2, a real Twitch chat message was received and its approved branch appeared in the local display preview. An OBS Studio Browser Source has shown an approved suggestion; actual Twitch broadcast footage and Devpost submission remain unverified. See [TWITCH_SETUP.md](TWITCH_SETUP.md) and [SUBMISSION.md](SUBMISSION.md). The details below reflect the November 1 audit and may describe the pre-relay state.
-# BranchCast — implementation and test handoff
+> **November 2 update:** Cholk received a real Twitch chat suggestion, approved it, and showed the result through OBS on a live Twitch broadcast. The app now uses Cholk branding; the simulated enhancement and sample controls were removed. The details below are the earlier implementation handoff and may describe previous behavior. YouTube upload and Devpost submission have not been verified here.
+# Cholk — implementation and test handoff
 
-**Status as of November 1, 2026:** BranchCast is a local hackathon prototype, not a completed or production-ready application. The repository contains a working local collaboration flow, two separate feasibility experiments, and a demonstration script. The work was fast because it uses a small Python standard-library server, plain HTML/CSS/JavaScript, SQLite, and simple prototype UI—not a full cloud product.
+**Status as of November 1, 2026:** Cholk is a local hackathon prototype, not a completed or production-ready application. The repository contains a working local collaboration flow, two separate feasibility experiments, and a demonstration script. The work was fast because it uses a small Python standard-library server, plain HTML/CSS/JavaScript, SQLite, and simple prototype UI—not a full cloud product.
 
 The [README](README.md) explains how to run the project and [DEMO.md](DEMO.md) contains a three-minute presentation. This document is the detailed follow-up list. A checked item below means it was implemented or verified at the time of this handoff; a pending item needs someone to complete and verify it.
 
@@ -22,7 +22,7 @@ The owner token and session links are prototype mechanisms, not a complete permi
 
 ## 2. Repository and local setup
 
-Repository: <https://github.com/Battosai1806/branchcast>. The repository is public, so never commit API keys, Twitch tokens, secrets, database files, private chat messages, or `.env.local`. The existing `.gitignore` excludes local env files, `diagram.json`, and `branchcast.db`; double-check `git status` and staged files before each push.
+Repository: <https://github.com/Cholk-twitch/branchcast>. The repository is public, so never commit API keys, Twitch tokens, secrets, database files, private chat messages, or `.env.local`. The existing `.gitignore` excludes local env files, `diagram.json`, and `branchcast.db`; double-check `git status` and staged files before each push.
 
 1. Clone the repository and use Python 3.10 or newer.
 2. From the project folder, run `python3 server.py` (on Windows, `py server.py` may be appropriate).
@@ -39,7 +39,7 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 
 **Observed result:** The OpenAI API key was created for the **Personal / Default project** and stored only in `.env.local` on the original machine. The selected key lifetime was 30 days from creation; verify whether it has expired before using it. The file is not in Git and will not appear on a partner's clone. A live request for the sample diagram reached OpenAI but returned HTTP 429 with `insufficient_quota` / `credit_balance_exhausted`. A promotional-credit eligibility check returned `not_qualified` for the connected account at that time. No successful live conversion has been recorded.
 
-**What “billing” means:** This is payment for API usage by the project; it is not a customer checkout, subscription system for BranchCast users, or a need to hire a payment manager. The account owner must decide whether to fund the API or use another provider. A ChatGPT subscription is separate from API billing; some eligible plans may offer API credits, subject to eligibility and activation. OpenAI's current [API credit guidance](https://developers.openai.com/api/docs/guides/chatgpt-api-credits) explains the offer and limits. Check the account's [billing page](https://platform.openai.com/settings/organization/billing) and [limits page](https://platform.openai.com/settings/organization/limits) before running paid requests. No credit card or account secret should be sent in chat, committed, or added to the app's client-side code.
+**What “billing” means:** This is payment for API usage by the project; it is not a customer checkout, subscription system for Cholk users, or a need to hire a payment manager. The account owner must decide whether to fund the API or use another provider. A ChatGPT subscription is separate from API billing; some eligible plans may offer API credits, subject to eligibility and activation. OpenAI's current [API credit guidance](https://developers.openai.com/api/docs/guides/chatgpt-api-credits) explains the offer and limits. Check the account's [billing page](https://platform.openai.com/settings/organization/billing) and [limits page](https://platform.openai.com/settings/organization/limits) before running paid requests. No credit card or account secret should be sent in chat, committed, or added to the app's client-side code.
 
 **Partner follow-up:**
 
@@ -76,11 +76,11 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 - [ ] Agree on and enforce cost controls, input retention, and privacy expectations. Make any simulated fallback visibly labeled.
 - [ ] Test malformed input, unsupported image, size limits, long request, bad key, exhausted balance, rate limit, model refusal, invalid schema, and poor-quality recognition.
 
-### 4.2 Connect Twitch to BranchCast
+### 4.2 Connect Twitch to Cholk
 
 - [ ] Decide the purpose of chat events: joining a session, suggesting content, triggering a command, or another defined interaction. The current listener only prints chat text.
 - [ ] Implement an appropriate Twitch authorization flow and safely manage tokens, expiration, validation, revocation, and refresh. Do not expose tokens in the browser or logs.
-- [ ] Bridge authorized events into the correct BranchCast session; define identity mapping and how a streamer grants or revokes access. Do not rely on display names as secure identities.
+- [ ] Bridge authorized events into the correct Cholk session; define identity mapping and how a streamer grants or revokes access. Do not rely on display names as secure identities.
 - [ ] Handle duplicate delivery, reconnects, missed events, rate limits, and listener restarts. Define behavior when Twitch is offline.
 - [ ] Add moderation controls, input validation, and limits before viewer-generated content can appear on stream.
 - [ ] Verify using a real channel and record the result. Test unauthorized users and revoked permissions as well as the happy path.

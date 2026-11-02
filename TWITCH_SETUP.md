@@ -1,21 +1,47 @@
-# BranchCast: Twitch and OBS setup
+# Cholk: Twitch and OBS setup
 
-The local Twitch relay reads chat commands and places them in the streamer's approval queue. AI enhancement is simulated and does not require a paid API.
+The Twitch relay reads chat commands and adds them to the streamer's submission queue. The streamer approves each idea before it appears on the OBS display.
 
-1. Sign in to Twitch, verify your email, and enable two-factor authentication. Register an application in the [Twitch Developer Console](https://dev.twitch.tv/console/apps), using a unique name and OAuth redirect URL `http://localhost:3000`. Follow [Twitch app registration](https://dev.twitch.tv/docs/authentication/register-app).
-2. Install Python 3.10+, pip, [Twitch CLI](https://dev.twitch.tv/docs/cli/), and OBS Studio. In the repository, create a virtual environment and install the dependency:
+## Set up Twitch
 
-   ```powershell
-   py -m venv .venv
-   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+1. Sign in to Twitch, verify your email, and enable two-factor authentication. Register an application in the [Twitch Developer Console](https://dev.twitch.tv/console/apps), using a unique name and OAuth redirect URL `http://localhost:3000`. See [Twitch app registration](https://dev.twitch.tv/docs/authentication/register-app).
+2. Install Python 3.10+, pip, the [Twitch CLI](https://dev.twitch.tv/docs/cli/), and OBS Studio. Install the relay dependency from the repository:
+
+   ```bash
+   python3 -m pip install -r requirements.txt
    ```
 
-3. Start the local application with `.\.venv\Scripts\python.exe server.py` and open `http://127.0.0.1:8000`. Keep the streamer browser open. Copy the `session` value from the browser URL.
-4. Using the [Twitch CLI token instructions](https://dev.twitch.tv/docs/cli/token-command/), configure the CLI with the application details and authorize a user token with `user:read:chat` for the broadcaster account. Find the authorized user's Twitch ID through [Get Users](https://dev.twitch.tv/docs/api/get-started/). When the broadcaster and authorized user are the same account, use that same ID for both environment variables. Never expose the token or Client Secret on stream or commit them to Git.
-5. In a second terminal, configure the environment variables described in [README.md](README.md): `TWITCH_CLIENT_ID`, `TWITCH_USER_TOKEN`, `TWITCH_BROADCASTER_ID`, and `TWITCH_USER_ID`. Run `.\.venv\Scripts\python.exe feasibility/twitch_bridge.py --session SESSION_ID`, replacing `SESSION_ID` with the value copied in step 3. Wait for a successful subscription message.
-6. In the actual Twitch channel chat, type `!branch Moon garden | Flowers bloom above the clouds`. The suggestion should appear in the streamer's **Submission queue**. Approve it to feature it on the overlay.
-7. In the app, open **OBS display**, copy the display URL, and add it as an OBS Browser Source on the same computer running BranchCast. Use a 1920×1080 source and check that the approved branch updates. Then test it during an actual Twitch broadcast. Do not show credentials in the recording.
+   On Windows, use `py -m pip install -r requirements.txt`.
+3. Start Cholk with `python3 server.py` (Windows: `py server.py`) and open `http://127.0.0.1:8000`. Keep the streamer browser open and copy the `session` value from its URL.
+4. Configure the Twitch CLI with your application's client ID and secret. Authorize a **user access token** with `user:read:chat` for the broadcaster account. See the [Twitch CLI token instructions](https://dev.twitch.tv/docs/cli/token-command/). Find the authorized user's numeric Twitch ID through [Get Users](https://dev.twitch.tv/docs/api/get-started/). When the broadcaster and authorized user are the same account, use that ID for both variables below.
+5. In a second terminal, set these environment variables using your own values:
 
-On November 2, 2026, a real Twitch chat command reached the approval queue and the approved branch appeared in the local display preview. An approved chat branch has also been shown in an OBS Studio Browser Source. A Twitch broadcast still needs a separate live test. The relay does not start a stream or send chat messages. Its current process holds credentials in environment memory and does not refresh expired tokens. Session sharing and the server remain local; do not expose the development server to the public internet.
+   ```bash
+   export TWITCH_CLIENT_ID='your-client-id'
+   export TWITCH_USER_TOKEN='your-user-access-token'
+   export TWITCH_BROADCASTER_ID='broadcaster-numeric-id'
+   export TWITCH_USER_ID='authorized-user-numeric-id'
+   ```
 
-For submission, follow the [official rules](https://twitchcon-codex.devpost.com/rules), record a video under three minutes showing BranchCast working on Twitch and how Codex was used, and upload it to YouTube so judges can access it.
+   In Windows PowerShell, use `$env:TWITCH_CLIENT_ID = 'your-client-id'` and the same format for the other three variables. Run the relay with the session ID from step 3:
+
+   ```bash
+   python3 feasibility/twitch_bridge.py --session YOUR_SESSION_ID
+   ```
+
+   On Windows, use `py feasibility/twitch_bridge.py --session YOUR_SESSION_ID`. Wait for the subscription confirmation.
+6. In your Twitch channel's chat, send:
+
+   ```text
+   !branch Moon garden | Flowers bloom above the clouds
+   ```
+
+   The suggestion appears in **Submission queue**. Approve it to feature it on the display.
+
+## Set up OBS
+
+In Cholk, open **OBS display**, copy the URL, and add it as an OBS **Browser Source** on the computer running Cholk. A 1920×1080 source is recommended.
+
+A real Twitch chat suggestion was received, approved, and shown through OBS on a Twitch broadcast on November 2, 2026.
+
+Keep the server and relay running during the demo. Do not share tokens or client secrets, or expose the local development server to the public internet. The relay does not refresh expired tokens.
