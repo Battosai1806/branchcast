@@ -1,7 +1,6 @@
-# BranchCast
+# Cholk
 
-A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 3 is underway: the local app now saves sessions and connects viewer forks, submissions, approval, and an updating OBS display. AI enhancement is simulated. A real Twitch chat suggestion has been received and shown in an OBS Studio Browser Source; broadcast testing remains.
-sdddsds
+A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 3 is underway: the local app now saves sessions and connects viewer forks, submissions, approval, and an updating OBS display. AI enhancement is not integrated. A real Twitch chat suggestion has been approved and shown through OBS on a Twitch broadcast.
 ## Run locally
 
 Run `python3 server.py` from the repository, then visit http://127.0.0.1:8000 in a modern browser. On Windows, `py server.py` works when Python is installed. Keep the server running while using the app; a static server or opening `index.html` directly cannot provide session functionality.
@@ -13,11 +12,11 @@ Run `python3 server.py` from the repository, then visit http://127.0.0.1:8000 in
 - **Submission queue:** review shape labels, approve an idea to feature it on the OBS display, or dismiss it.
 - **OBS display:** copy the display URL into an OBS Browser Source. It refreshes automatically when an idea is approved.
 
-Sessions and submissions persist in the local SQLite file `branchcast.db` (ignored by Git); viewer drafts and the streamer access token are stored in the browser. Keep the original streamer browser and session URL: clearing its local storage loses streamer access. The OBS browser source can use the same server on the same computer. The viewer link uses the server's address, so `127.0.0.1` links work only on that computer. This is a local development prototype, not public hosting: it does not provide accounts, production security, remote collaboration over the internet, or reliable multi-user synchronization. The simulated enhancement changes shape styles and the sample sketch adds predefined shapes; neither calls AI. A separately started Twitch relay can submit chat suggestions into the queue. On November 2, 2026, real chat suggestions were received and approved, and an approved suggestion appeared in an OBS Studio Browser Source. The actual Twitch broadcast remains unverified.
+Sessions and submissions persist in the local SQLite file `branchcast.db` (ignored by Git); viewer drafts and the streamer access token are stored in the browser. Keep the original streamer browser and session URL: clearing its local storage loses streamer access. The OBS browser source can use the same server on the same computer. The viewer link uses the server's address, so `127.0.0.1` links work only on that computer. This is a local development prototype, not public hosting: it does not provide accounts, production security, remote collaboration over the internet, or reliable multi-user synchronization. The canvas supports editable shapes. AI enhancement is not integrated. A separately started Twitch relay can submit chat suggestions into the queue. On November 2, 2026, real chat suggestions were received and approved, and an approved suggestion appeared in an OBS Studio Browser Source. The approved result was also shown on a Twitch broadcast on November 2, 2026.
 
 ## Twitch chat and submission
 
-To connect a real Twitch channel, follow [TWITCH_SETUP.md](TWITCH_SETUP.md). With the local Twitch relay running, a chat message of the form `!branch title | description` becomes a pending submission; only the streamer can approve it for the OBS display. Real Twitch chat suggestions have been received and approved, and the OBS Studio Browser Source has displayed the result. The actual Twitch broadcast still requires verification. The sample sketch and enhancement are clearly labeled simulations.
+To connect a real Twitch channel, follow [TWITCH_SETUP.md](TWITCH_SETUP.md). With the local Twitch relay running, a chat message of the form `!branch title | description` becomes a pending submission; only the streamer can approve it for the OBS display. Real Twitch chat suggestions have been received and approved, and the OBS Studio Browser Source has displayed the result. The approved result was also shown on a Twitch broadcast on November 2, 2026. AI image conversion remains a separate experiment.
 
 For the event requirements and a draft description, see [SUBMISSION.md](SUBMISSION.md). The official event requires a working Twitch connection and a video showing the project working on Twitch and how Codex was used.
 ## Stage 2: feasibility experiments
