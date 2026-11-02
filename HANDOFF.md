@@ -1,4 +1,4 @@
-> **November 2 update:** A local Twitch chat relay has been implemented: it routes `!branch title | description` into the streamer approval queue. Offline integration tests pass. On November 2, a real Twitch chat message was received and its approved branch appeared in the local display preview. Actual OBS Studio, Twitch broadcast footage, and Devpost submission remain unverified. See [TWITCH_SETUP.md](TWITCH_SETUP.md) and [SUBMISSION.md](SUBMISSION.md). The details below reflect the November 1 audit and may describe the pre-relay state.
+> **November 2 update:** A local Twitch chat relay has been implemented: it routes `!branch title | description` into the streamer approval queue. Offline integration tests pass. On November 2, a real Twitch chat message was received and its approved branch appeared in the local display preview. An OBS Studio Browser Source has shown an approved suggestion; actual Twitch broadcast footage and Devpost submission remain unverified. See [TWITCH_SETUP.md](TWITCH_SETUP.md) and [SUBMISSION.md](SUBMISSION.md). The details below reflect the November 1 audit and may describe the pre-relay state.
 # BranchCast — implementation and test handoff
 
 **Status as of November 1, 2026:** BranchCast is a local hackathon prototype, not a completed or production-ready application. The repository contains a working local collaboration flow, two separate feasibility experiments, and a demonstration script. The work was fast because it uses a small Python standard-library server, plain HTML/CSS/JavaScript, SQLite, and simple prototype UI—not a full cloud product.
@@ -12,10 +12,10 @@ The [README](README.md) explains how to run the project and [DEMO.md](DEMO.md) c
 | Streamer canvas | Add, rename, move, and delete labeled shapes; save the canvas title and prompt. | Freehand drawing, arrows/connectors, resizing, undo/redo, zoom, and real AI enhancement are not implemented in the main app. |
 | Viewer fork | Copy a session's canvas into a browser-local draft, edit it, and submit it. | A draft is not continuously synchronized to other devices, and a `127.0.0.1` link cannot be opened from a different machine. |
 | Submission queue | An owner can see pending submissions, approve one, or dismiss one. | The queue shows labels rather than a full visual branch preview; stronger account authentication, moderation, and spam prevention are absent. |
-| OBS display | A separate browser page polls the local server and shows the last approved idea. | A live OBS Studio capture was not verified; remote hosting and production reliability are not implemented. The local preview renders simple positioned shapes. |
+| OBS display | A separate browser page polls the local server and shows the last approved idea. | OBS Studio has displayed an approved suggestion in a Browser Source; a live Twitch broadcast, reconnect behavior, remote hosting, and production reliability remain unverified. |
 | Persistence | A local SQLite database stores session, canvas, and submitted/featured data. Drafts and owner tokens are held in browser local storage. | There is no shared cloud database, account recovery, backups, migration system, or production multi-user protection. Clearing browser storage loses the owner token. |
 | AI feasibility | A separate Python script sends an image to OpenAI and requests structured shape data; a separate HTML editor can load that data. | The live request has not succeeded; the main app does not call this script, and its **Simulate enhancement** button is only a style change. |
-| Twitch feasibility | A local EventSub relay received a real Twitch chat suggestion and queued it for streamer approval. | Only one real-channel test has been observed; recovery, token expiry, and actual OBS/Twitch broadcast still need testing. |
+| Twitch feasibility | A local EventSub relay received a real Twitch chat suggestion and queued it for streamer approval. | Real-channel chat and the OBS Browser Source have been demonstrated; recovery, token expiry, and the actual Twitch broadcast still need testing. |
 | Demo | A local three-minute script and presentation view exist. | The official competition requirements were reviewed; no final recording or submission has been produced. |
 
 The owner token and session links are prototype mechanisms, not a complete permission system. Do not expose the local Python server to the public internet as it stands.
@@ -63,7 +63,7 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 4. Run `python3 feasibility/twitch_chat.py`. Confirm it reports a successful subscription, then send a chat message in the target channel. Verify the listener prints that message and its ID. Do not publish raw user chat logs without considering privacy.
 5. Test expired/revoked tokens, a wrong client ID, missing scope, a disconnected socket, a Twitch-requested reconnect, and duplicate messages. Twitch notes that events may be redelivered and that events lost during an unexpected disconnect are not replayed; see [EventSub WebSocket handling](https://dev.twitch.tv/docs/eventsub/handling-websocket-events/).
 
-**Current result:** A real message reached the backend and was approved in the UI. **Still needed:** verify reconnection and authorization failure behavior, token lifecycle, actual OBS Studio rendering, and the Twitch broadcast.
+**Current result:** A real message reached the backend and was approved in the UI. **Still needed:** verify reconnection and authorization failure behavior, token lifecycle, and the actual Twitch broadcast. An OBS Studio Browser Source has displayed an approved branch.
 
 ## 4. Pending implementation work
 
@@ -103,7 +103,8 @@ Repository: <https://github.com/Battosai1806/branchcast>. The repository is publ
 
 ### 4.5 OBS and delivery
 
-- [ ] Test the generated URL in **actual OBS Studio**, not just a headless browser. Confirm source dimensions, transparency/background requirements, font loading, refresh, reconnect, and readability on stream.
+- [x] The generated URL displayed an approved Twitch suggestion as a Browser Source in OBS Studio (user screenshot, November 2, 2026).
+- [ ] Test OBS refresh, reconnect, font loading, and readability in an actual Twitch broadcast.
 - [ ] Exercise the intended hosted URL in OBS, including restarts, expired sessions, and bad network conditions. The current display polls every two seconds.
 - [ ] Confirm the team's eligibility and complete the official event submission requirements, including a real Twitch demonstration and accessible YouTube video. See [SUBMISSION.md](SUBMISSION.md).
 - [ ] Rehearse the [demo script](DEMO.md), record a successful run, prepare fallback footage, and submit only after the team agrees the live integrations and claims are accurate.

@@ -1,6 +1,6 @@
 # BranchCast — Devpost submission materials
 
-**Draft status:** The repository, copy, session ID, and demo plan are ready. A real Twitch chat command reached the queue and appeared in the local display preview on November 2, 2026. An actual OBS Studio source and Twitch broadcast test, video recording and upload, team confirmation, and Devpost submission are still pending. Review the copy against the actual finished demo before submitting; remove or revise any feature that was not shown or verified.
+**Draft status:** The repository, copy, session ID, and demo plan are ready. Real Twitch chat commands reached the queue and an approved branch appeared in an OBS Studio Browser Source on November 2, 2026. A Twitch broadcast test, video recording and upload, team confirmation, and Devpost submission are still pending. Review the copy against the actual finished demo before submitting; remove or revise any feature that was not shown or verified.
 
 ## Project title
 
@@ -48,7 +48,8 @@ We plan to verify and refine the live Twitch experience, expand the drawing edit
 
 - [x] Twitch account authorized and token supplied to the local relay without sharing it in chat or committing it.
 - [x] Run BranchCast and the relay using [TWITCH_SETUP.md](TWITCH_SETUP.md). A real `!branch` message reached the queue and was approved on November 2, 2026.
-- [ ] Verify the actual OBS Studio Browser Source shows the approved branch and test the intended Twitch broadcast. The in-app display preview has passed; OBS Studio itself has not yet been tested.
+- [x] Verify an OBS Studio Browser Source shows an approved Twitch branch (user screenshot, November 2, 2026).
+- [ ] Test the intended Twitch broadcast and capture footage showing the real chat-to-OBS interaction.
 - [ ] Record real project footage on Twitch and the Codex build process using [DEMO.md](DEMO.md). Keep the video under three minutes. Hide credentials and use only material the team has permission to show.
 - [ ] Upload the video to YouTube, check that judges can open it, and capture the URL. The event update says unlisted is acceptable; private is not.
 - [ ] Verify setup from the public repository and confirm that no keys, tokens, `.env` files, or local database have been committed.

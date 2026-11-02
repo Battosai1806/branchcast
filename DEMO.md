@@ -1,6 +1,6 @@
 # BranchCast: three-minute Twitch demo
 
-The hackathon requires footage of the project working on Twitch and footage showing how it was built with Codex. Record only after completing the real Twitch and OBS test in [TWITCH_SETUP.md](TWITCH_SETUP.md). Do not show tokens, account secrets, or unapproved viewer content. The sample sketch and enhancement are simulations: identify them as such.
+The hackathon requires footage of the project working on Twitch and footage showing how it was built with Codex. Twitch chat and the OBS Browser Source have been demonstrated locally; record after verifying the actual Twitch broadcast using [TWITCH_SETUP.md](TWITCH_SETUP.md). Do not show tokens, account secrets, or unapproved viewer content. The sample sketch and enhancement are simulations: identify them as such.
 
 ## Preparation
 
