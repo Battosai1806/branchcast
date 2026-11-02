@@ -1,7 +1,7 @@
 # BranchCast
 
 A collaborative live-stream brainstorming prototype for the Twitch hackathon. Stage 3 is underway: the local app now saves sessions and connects viewer forks, submissions, approval, and an updating OBS display. AI enhancement is simulated. A real Twitch chat suggestion has been received and shown in an OBS Studio Browser Source; broadcast testing remains.
-
+sdddsds
 ## Run locally
 
 Run `python3 server.py` from the repository, then visit http://127.0.0.1:8000 in a modern browser. On Windows, `py server.py` works when Python is installed. Keep the server running while using the app; a static server or opening `index.html` directly cannot provide session functionality.
