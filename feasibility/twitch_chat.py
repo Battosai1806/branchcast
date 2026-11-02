@@ -8,6 +8,7 @@ import urllib.request
 
 try:
     import websockets
+    from websockets.exceptions import WebSocketException
 except ImportError:
     sys.exit("Install dependencies first: python -m pip install -r requirements.txt")
 
@@ -19,7 +20,7 @@ def subscribe(session_id, client_id, token, broadcaster_id, user_id):
     with urllib.request.urlopen(req, timeout=8) as response:
         return json.load(response)
 
-async def listen(client_id, token, broadcaster_id, user_id):
+async def listen(client_id, token, broadcaster_id, user_id, on_event=None):
     url = URL
     transferred = False
     seen = set()
@@ -45,7 +46,10 @@ async def listen(client_id, token, broadcaster_id, user_id):
                             seen.clear()
                             seen.add(message_id)
                         event = payload.get("event", {})
-                        print(json.dumps({"chatter": event.get("chatter_user_name"), "text": event.get("message", {}).get("text"), "message_id": message_id}, ensure_ascii=False), flush=True)
+                        if on_event is None:
+                            print(json.dumps({"chatter": event.get("chatter_user_name"), "text": event.get("message", {}).get("text"), "message_id": message_id}, ensure_ascii=False), flush=True)
+                        else:
+                            await asyncio.to_thread(on_event, event)
                     elif kind == "session_reconnect":
                         url = payload["session"]["reconnect_url"]
                         transferred = True
@@ -55,7 +59,9 @@ async def listen(client_id, token, broadcaster_id, user_id):
                 else:
                     url, transferred = URL, False
                     await asyncio.sleep(2)
-        except (OSError, websockets.exceptions.WebSocketException) as exc:
+        except urllib.error.HTTPError as exc:
+            raise RuntimeError(f"Twitch rejected the subscription (HTTP {exc.code}); check your app, token, scope, and channel.") from None
+        except (OSError, WebSocketException) as exc:
             print(f"Connection lost ({exc}); reconnecting...", file=sys.stderr, flush=True)
             url, transferred = URL, False
             await asyncio.sleep(3)

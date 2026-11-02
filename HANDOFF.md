@@ -1,3 +1,4 @@
+> **November 2 update:** A local Twitch chat relay has been implemented: it routes `!branch title | description` into the streamer approval queue. Offline integration tests pass, but real Twitch authorization, a live event, actual OBS/Twitch footage, and Devpost submission remain unverified. See [TWITCH_SETUP.md](TWITCH_SETUP.md) and [SUBMISSION.md](SUBMISSION.md). The details below reflect the November 1 audit and may describe the pre-relay state.
 # BranchCast — implementation and test handoff
 
 **Status as of November 1, 2026:** BranchCast is a local hackathon prototype, not a completed or production-ready application. The repository contains a working local collaboration flow, two separate feasibility experiments, and a demonstration script. The work was fast because it uses a small Python standard-library server, plain HTML/CSS/JavaScript, SQLite, and simple prototype UI—not a full cloud product.

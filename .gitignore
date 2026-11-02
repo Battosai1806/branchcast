@@ -9,3 +9,5 @@ __pycache__/
 diagram.json
 branchcast.db
 branchcast.db-*
+.venv/
+.tools/

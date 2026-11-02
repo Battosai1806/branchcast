@@ -1,35 +1,30 @@
-# BranchCast: three-minute demo
+# BranchCast: three-minute Twitch demo
 
-This script demonstrates the **local prototype**. AI enhancement is simulated; Twitch chat, real AI conversion, and public internet sharing are not yet integrated. Say that explicitly in the presentation.
+The hackathon requires footage of the project working on Twitch and footage showing how it was built with Codex. Record only after completing the real Twitch and OBS test in [TWITCH_SETUP.md](TWITCH_SETUP.md). Do not show tokens, account secrets, or unapproved viewer content. The sample sketch and enhancement are simulations: identify them as such.
 
-## Before recording
+## Preparation
 
-1. Run `python3 server.py` (`py server.py` on Windows) and open `http://127.0.0.1:8000` in the streamer browser. Keep the server and this browser open.
-2. In Streamer editor, set the title to **The world of Aeris** and the prompt to **What stories live in the sky?** Add or rename a few shapes. Wait until the canvas says **Saved to this server**.
-3. Choose **Copy viewer link** and open it in a second browser window or a private browser on the same computer. This ensures the viewer has a separate draft and no streamer token.
-4. In the streamer window, open **OBS display**, choose **Copy OBS URL**, and add that URL to an OBS Browser Source. Set the source size to 1920 × 1080. Alternatively open the URL in a separate browser window as a display preview. Both must be on the computer running the server.
-5. Rehearse a submission and approval, then refresh the queue and ensure there is no pending rehearsal item. Keep a screen recording of a successful rehearsal available as a fallback.
+1. Start BranchCast and its Twitch relay, authorize the broadcaster account, and confirm the relay reports a successful subscription.
+2. Open the streamer session and add its OBS display URL as a Browser Source. Confirm it is visible in a test Twitch broadcast and that the same session ID is used throughout.
+3. Send a `!branch title | description` message in the actual Twitch channel, approve it, and verify the OBS source updates. Prepare an additional original chat suggestion for the recording.
+4. Open the Codex conversation and show the actual development work without displaying any credentials. Prepare a recording fallback and check audio/scene framing.
 
-## Script
+## Suggested script
 
 | Time | Show | Say |
 | --- | --- | --- |
-| 0:00–0:25 | Streamer editor | “BranchCast helps a streamer turn a starting idea into a collaborative creative session. Here is the world of Aeris and a few starting ideas.” |
-| 0:25–0:55 | Move a shape and edit a label. Copy the viewer link. | “The streamer builds the starting canvas. A viewer can open a separate fork and build on it.” |
-| 0:55–1:30 | Switch to viewer window, add a shape, enter a name, title, and description, then submit. | “A viewer adds their own branch and submits it for review. The original canvas stays separate from their fork.” |
-| 1:30–2:00 | Return to the submission queue and approve the branch. | “The streamer controls which community submissions reach the stream.” |
-| 2:00–2:25 | Show the OBS browser source updating. | “The approved branch appears automatically in this OBS display. This demo runs on a local server.” |
-| 2:25–2:45 | Return to the canvas and select **Simulate enhancement**. | “This styling effect is a simulation. Real AI diagram conversion and Twitch events are the next integrations to verify.” |
-| 2:45–3:00 | Show BranchCast title and repository. | “Our goal is to turn a live stream into a world the community can build together.” |
+| 0:00–0:20 | Twitch stream and BranchCast | “BranchCast turns a streamer's starting idea into a community collaboration.” |
+| 0:20–0:45 | Streamer canvas | “The streamer creates the starting canvas and chooses what goes on stream.” |
+| 0:45–1:20 | Actual Twitch chat | “A viewer submits an idea using `!branch`, and it arrives in the streamer's queue.” Send a real chat command. |
+| 1:20–1:50 | Submission queue | Approve the actual Twitch suggestion and explain that approval keeps the streamer in control. |
+| 1:50–2:15 | OBS source visible on Twitch | Show the approved branch appearing on the running broadcast. |
+| 2:15–2:35 | Sample-sketch simulation | “This example uses predefined shapes; live AI conversion is not yet integrated.” |
+| 2:35–2:55 | Codex conversation and repository | Show how Codex helped build the project and summarize the idea. |
 
-## If something goes wrong
+Keep the finished video under three minutes, upload it to YouTube with a judge-accessible visibility, and provide its link in Devpost. See [SUBMISSION.md](SUBMISSION.md) and the [official rules](https://twitchcon-codex.devpost.com/rules).
 
-- **Server offline:** restart `python3 server.py`, then reload the existing session URL. The session database survives a restart.
-- **No streamer controls:** use the original streamer browser and the original session URL. The streamer token is stored in that browser, not in the viewer link.
-- **OBS does not update:** verify the Browser Source URL contains the same session ID as the streamer window and ends with `#display`. Check that the local server is running; the display polls every two seconds.
-- **Viewer link does not work on a phone or another computer:** the default server listens only on the same machine. Use a second browser window on the server computer for this demo.
-- **Network or screen-sharing trouble:** play the rehearsal recording and identify it as a recording.
+## Fallbacks
 
-## Remaining delivery work
-
-Real OpenAI conversion needs funded API access and a successful live test. Twitch needs an authorized app, a chat-reading token, and a real event test. Public multi-user hosting, authentication, and production permissions are also still needed before a public launch.
+- If Twitch is disconnected, check the relay terminal and reauthorize if needed. Do not claim simulated chat is a live Twitch connection.
+- If the display does not update, confirm OBS and the streamer page reference the same session and the local server is running.
+- If live AI is not funded, use the explicitly labeled simulation. If a recording must be used as a backup, identify it as a recording.

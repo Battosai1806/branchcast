@@ -4,6 +4,7 @@ import json
 import sys
 import types
 import unittest
+import urllib.error
 from contextlib import redirect_stdout
 from io import StringIO
 from unittest.mock import patch
@@ -11,9 +12,10 @@ from unittest.mock import patch
 # The transport is replaced with an in-process EventSub fixture. The real
 # dependency is only needed when connecting to Twitch.
 fake_websockets = types.ModuleType('websockets')
-fake_websockets.exceptions = types.SimpleNamespace(WebSocketException=type('WebSocketException', (Exception,), {}))
+fake_websockets.exceptions = types.ModuleType('websockets.exceptions')
+fake_websockets.exceptions.WebSocketException = type('WebSocketException', (Exception,), {})
 fake_websockets.connect = lambda *args, **kwargs: None
-with patch.dict(sys.modules, {'websockets': fake_websockets}):
+with patch.dict(sys.modules, {'websockets': fake_websockets, 'websockets.exceptions': fake_websockets.exceptions}):
     twitch = importlib.import_module('feasibility.twitch_chat')
 
 
@@ -53,6 +55,26 @@ class TwitchTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(output.getvalue().count('Hello world'), 1)
         self.assertIn('viewer', output.getvalue())
 
+    async def test_callback_receives_twitch_event_once(self):
+        event = {'chatter_user_name': 'viewer', 'message': {'text': '!branch Moon | A garden'}}
+        notification = {'metadata': {'message_type': 'notification', 'message_id': 'event-1'}, 'payload': {'event': event}}
+        messages = [
+            {'metadata': {'message_type': 'session_welcome'}, 'payload': {'session': {'id': 'session-1'}}},
+            notification, notification,
+            {'metadata': {'message_type': 'revocation'}, 'payload': {}},
+        ]
+        delivered = []
+        with patch.object(twitch.websockets, 'connect', return_value=Socket(messages)), patch.object(twitch, 'subscribe'):
+            with self.assertRaisesRegex(RuntimeError, 'revoked'):
+                await twitch.listen('client', 'token', 'broadcaster', 'user', on_event=delivered.append)
+        self.assertEqual(delivered, [event])
+    async def test_rejected_subscription_fails_without_reconnecting(self):
+        welcome = {'metadata': {'message_type': 'session_welcome'}, 'payload': {'session': {'id': 'session-1'}}}
+        error = urllib.error.HTTPError('https://api.twitch.tv/', 401, 'Unauthorized', {}, None)
+        with patch.object(twitch.websockets, 'connect', return_value=Socket([welcome])) as connect, patch.object(twitch, 'subscribe', side_effect=error):
+            with self.assertRaisesRegex(RuntimeError, 'HTTP 401'):
+                await twitch.listen('client', 'token', 'broadcaster', 'user')
+        self.assertEqual(connect.call_count, 1)
     def test_subscription_uses_websocket_session_and_user_ids(self):
         class Response:
             def __enter__(self): return self

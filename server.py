@@ -6,21 +6,27 @@ import os
 import secrets
 import sqlite3
 import time
+from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent
 DB_PATH = Path(os.getenv('BRANCHCAST_DB', ROOT / 'branchcast.db'))
-STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8')}
+STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/sample-diagram.png': ('feasibility/sample-diagram.png', 'image/png')}
 MAX_BODY = 128 * 1024
 
 
+@contextmanager
 def database():
     db = sqlite3.connect(DB_PATH, timeout=10)
     db.row_factory = sqlite3.Row
-    db.execute('PRAGMA foreign_keys = ON')
-    return db
+    try:
+        db.execute('PRAGMA foreign_keys = ON')
+        with db:
+            yield db
+    finally:
+        db.close()
 
 
 def initialize():
